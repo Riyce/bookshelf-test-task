@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block title %}Bookshelf{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% include "includes/create.html" %}
+        {% include "includes/books_table.html" with books=books %}
+    </div>
+</div>
+{% include "includes/modal.html" %}
+{% endblock %}
+
+{% block javascript %}
+<script>
+$("form#addBook").submit(function() {
+    var name = $('input[name="name"]').val().trim();
+    var author = $('input[name="author"]').val().trim();
+    var year = $('input[name="year"]').val().trim();
+    if (name && author && year) {
+        $.ajax({
+            url: '{% url "book_create" %}',
+            data: {
+                'name': name,
+                'author': author,
+                'year': year,
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.book) {
+                  appendToTable(data.book);
+                }
+            }
+        });
+      }
+    $('form#addBook').trigger("reset");
+      return false;
+});
+function appendToTable(book) {
+  $("#bookTable > tbody:last-child").append(`
+        <tr id="book-${book.id}">
+            <td class="bookName" name="name">${book.name}</td>
+            <td class="bookAuthor" name="author">${book.author}</td>
+            <td class="bookYear" name="year">${book.year}</td>
+            <td>
+                <button class="btn btn-success form-control" onClick="editBook(${book.id})" data-toggle="modal" data-target="#myModal")">EDIT</button>
+            </td>
+            <td>
+                <button class="btn btn-danger form-control" onClick="deleteBook(${book.id})">DELETE</button>
+            </td>
+        </tr>
+    `);
+}
+</script>
+<script>
+$("form#updateBook").submit(function() {
+    var id = $('input[name="formId"]').val().trim();
+    var name = $('input[name="formName"]').val().trim();
+    var author = $('input[name="formAuthor"]').val().trim();
+    var year = $('input[name="formYear"]').val().trim();
+    if (name && author && year) {
+        $.ajax({
+            url: '{% url "book_update" %}',
+            data: {
+                'id': id,
+                'name': name,
+                'author': author,
+                'year': year
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.book) {
+                  updateToTabel(data.book);
+                }
+            }
+        });
+       }
+    $('form#updateBook').trigger("reset");
+    $('#myModal').modal('hide');
+    return false;
+});
+
+
+function editBook(id) {
+  if (id) {
+    tr_id = "#book-" + id;
+    name = $(tr_id).find(".bookName").text();
+    author = $(tr_id).find(".bookAuthor").text();
+    year = $(tr_id).find(".bookYear").text();
+    $('#form-id').val(id);
+    $('#form-name').val(name);
+    $('#form-author').val(author);
+    $('#form-year').val(year);
+  }
+}
+
+
+function updateToTabel(book){
+    $("#bookTable #book-" + book.id).children(".bookData").each(function() {
+        var attr = $(this).attr("name");
+        if (attr == "name") {
+          $(this).text(book.name);
+        } else if (attr == "author") {
+          $(this).text(book.author);
+        } else {
+          $(this).text(book.year);
+        }
+      });
+}
+</script>
+{% endblock javascript %}

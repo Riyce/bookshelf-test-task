@@ -1,0 +1,48 @@
+<div class="col-md-8">
+  <h3>Books</h3>
+  <table id="bookTable" class="table">
+    <tr>
+      <th>Name</th>
+      <th>Author</th>
+      <th>Year</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+    {% if books %}
+      {% for book in books %}
+        <tr id="book-{{book.id}}">
+          <td class="bookName bookData" name="name">{{book.name}}</td>
+          <td class="bookAuthor bookData" name="author">{{book.author}}</td>
+          <td class="bookYear bookData" name="year">{{book.year}}</td>
+          <td>
+            <button class="btn btn-success form-control" onClick="editBook({{book.id}})" data-toggle="modal" data-target="#myModal")">EDIT</button>
+          </td>
+          <td>
+            <button class="btn btn-danger form-control" onClick="deleteBook({{book.id}})">DELETE</button>
+          </td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+  </table>
+</div>
+{% block javascript %}
+<script>
+function deleteBook(id) {
+  var action = confirm("Are you sure you want to delete this Book?");
+  if (action != false) {
+    $.ajax({
+      url: '{% url "book_delete" %}',
+      data: {
+        'id': id,
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.deleted) {
+          $("#bookTable #book-" + id).remove();
+        }
+      }
+    });
+  }
+}
+</script>
+{% endblock javascript %}
