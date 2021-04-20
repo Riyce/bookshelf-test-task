@@ -42,10 +42,10 @@ function appendToTable(book) {
             <td class="bookAuthor" name="author">${book.author}</td>
             <td class="bookYear" name="year">${book.year}</td>
             <td>
-                <button class="btn btn-success form-control" onClick="editBook(${book.id})" data-toggle="modal" data-target="#myModal")">EDIT</button>
+                <button class="btn btn-primary" onClick="editBook(${book.id})" data-toggle="modal" data-target="#myModal")">EDIT</button>
             </td>
             <td>
-                <button class="btn btn-danger form-control" onClick="deleteBook(${book.id})">DELETE</button>
+                <button class="btn btn-danger" onClick="deleteBook(${book.id})">DELETE</button>
             </td>
         </tr>
     `);
