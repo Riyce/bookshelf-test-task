@@ -7,7 +7,7 @@ class Book(models.Model):
     year = models.IntegerField(verbose_name='Release date')
 
     class Meta:
-        ordering = ['-id']
+        ordering = ['id']
         verbose_name = 'Book'
         verbose_name_plural = 'Books'
 

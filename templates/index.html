@@ -36,7 +36,7 @@ $("form#addBook").submit(function() {
       return false;
 });
 function appendToTable(book) {
-  $("#bookTable > tbody:last-child").append(`
+  $("#bookTable > tbody:first-child").append(`
         <tr id="book-${book.id}">
             <td class="bookName" name="name">${book.name}</td>
             <td class="bookAuthor" name="author">${book.author}</td>
